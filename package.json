@@ -28,4 +28,12 @@
     "typescript": "^5.2.2",
     "vite": "^5.3.1"
   }
+  {
+  "name": "votre-projet",
+  "version": "1.0.0",
+  "scripts": {
+    "test": "echo \"No tests specified\" && exit 0"
+  },
+
+}
 }
