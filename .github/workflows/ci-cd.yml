@@ -10,12 +10,27 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-    - name: Set up Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '20'
-    - name: Install dependencies
-      run: npm ci
-    - name: List installed packages
-      run: npm list --depth=0
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: List installed packages
+        run: npm list --depth=0
+
+      - name: Build project
+        run: npm run build
+
+      - name: Deploy to Preproduction
+        if: github.ref == 'refs/heads/main'
+        env:
+          HOST: ${{ secrets.PREPROD_HOST }}
+          USERNAME: ${{ secrets.PREPROD_USER }}
+          PASSWORD: ${{ secrets.PREPROD_PASS }}
+        run: |
+          scp -r ./build ${{ env.USERNAME }}@${{ env.HOST }}:/path/to/your/preproduction
