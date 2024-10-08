@@ -26,6 +26,9 @@ jobs:
       - name: Build project
         run: npm run build
 
+      - name: Create SSH directory
+        run: mkdir -p ~/.ssh
+
       - name: Debugging Info
         run: |
           echo "HOST: ${{ secrets.PREPROD_HOST }}"
