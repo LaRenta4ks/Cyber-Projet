@@ -26,11 +26,19 @@ jobs:
       - name: Build project
         run: npm run build
 
+      - name: Debugging Info
+        run: |
+          echo "HOST: ${{ secrets.PREPROD_HOST }}"
+          echo "USERNAME: ${{ secrets.PREPROD_USER }}"
+
       - name: Deploy to Preproduction
         if: github.ref == 'refs/heads/main'
         env:
           HOST: ${{ secrets.PREPROD_HOST }}
           USERNAME: ${{ secrets.PREPROD_USER }}
-          PASSWORD: ${{ secrets.PREPROD_PASS }}
+          SSH_KEY: ${{ secrets.PREPROD_SSH_KEY }}
         run: |
-          scp -r ./build ${{ env.USERNAME }}@${{ env.HOST }}:/path/to/your/preproduction
+          echo "${SSH_KEY}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh -o StrictHostKeyChecking=no ${{ env.USERNAME }}@${{ env.HOST }} "mkdir -p /path/to/your/preproduction"
+          scp -i ~/.ssh/id_rsa -r ./build ${{ env.USERNAME }}@${{ env.HOST }}:/path/to/your/preproduction
